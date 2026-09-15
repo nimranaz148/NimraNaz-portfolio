@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NIMRA Naz — Personal Portfolio Website 🚀
 
-## Getting Started
+A modern, highly animated personal portfolio built for **Nimra Naz** — Full-Stack & Agentic AI Developer based in Karachi, Pakistan.
 
-First, run the development server:
+![Portfolio Preview](/public/characters/standing.jpg)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🎭 **Interactive 3D Avatar & Video Intro**: Option 1 "Avatar Comes to Life" with sound toggle and video introduction.
+- 🎨 **GSAP & Motion Animations**: Custom scroll-triggered animations, sticky experience card stack, and smooth parallax effects.
+- 📱 **100% Responsive**: Tailored layouts across mobile phones, tablets, and desktop displays with responsive mobile menu.
+- 💼 **Featured Client & AI Projects**: Live showcase including Divine Group corporate website, AI Service Marketplace, PromptVault, and Hackathons.
+- 🎓 **Academics & Certifications**: Panaversity Certified in Agentic AI & Web, Intermediate (F.Sc) from Sir Syed Govt Girls College.
+- ⚡ **Modern Tech Stack**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS, Lenis Smooth Scroll.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Animations:** [GSAP (GreenSock)](https://greensock.com/gsap/) & [Motion (Framer Motion)](https://motion.dev/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Forms:** React Hook Form + Zod
+- **Deployment:** [Vercel](https://vercel.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Getting Started
 
-## Deploy on Vercel
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/nimranaz148/NimraNaz-portfolio.git
+   cd NimraNaz-portfolio
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 📬 Connect with Me
+
+- **LinkedIn:** [nimra-naz-671ab32b9](https://www.linkedin.com/in/nimra-naz-671ab32b9/)
+- **GitHub:** [@nimranaz148](https://github.com/nimranaz148)
+- **X (Twitter):** [@NazNimranaz148](https://x.com/NazNimranaz148)
+- **Email:** [nimranaz148@gmail.com](mailto:nimranaz148@gmail.com)
+
+---
+
+© 2026 NIMRA Naz. All rights reserved.

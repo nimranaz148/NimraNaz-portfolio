@@ -1,69 +1,80 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { portfolioData } from "@/data/portfolio-data";
+import { useSectionInView } from "@/hooks/use-section-in-view";
+import Preloader from "@/components/sections/preloader";
+import Navbar from "@/components/sections/navbar";
+import HeroSection from "@/components/sections/hero-section";
+import AboutSection from "@/components/sections/about-section";
+import ExperienceSection from "@/components/sections/experience-section";
+import ProjectsSection from "@/components/sections/projects-section";
+import SkillsSection from "@/components/sections/skills-section";
+import AchievementsSection from "@/components/sections/achievements-section";
+import ContactSection from "@/components/sections/contact-section";
+import Footer from "@/components/sections/footer";
+
+const SECTION_IDS = [
+  "about",
+  "experience",
+  "projects",
+  "skills",
+  "achievements",
+  "contact",
+];
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+  const activeSection = useSectionInView(SECTION_IDS);
+
+  const { siteConfig, hero, about, experience, projects, skills, achievements, contact, footer } =
+    portfolioData;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      {/* Preloader */}
+      {isLoading && (
+        <Preloader
+          monogram={siteConfig.monogram}
+          role={siteConfig.role}
+          onComplete={() => setIsLoading(false)}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      )}
+
+      {/* Main content — hidden while preloader is active */}
+      {!isLoading && (
+        <>
+          {/* Floating Navbar */}
+          <Navbar monogram={siteConfig.monogram} activeSection={activeSection} />
+
+          {/* Main content area */}
+          <main id="main-content">
+            {/* 01 — Hero */}
+            <HeroSection siteConfig={siteConfig} hero={hero} />
+
+            {/* 02 — About */}
+            <AboutSection data={about} />
+
+            {/* 03 — Experience */}
+            <ExperienceSection data={experience} />
+
+            {/* 04 — Projects */}
+            <ProjectsSection data={projects} />
+
+            {/* 05 — Skills */}
+            <SkillsSection data={skills} />
+
+            {/* 06 — Achievements */}
+            <AchievementsSection data={achievements} />
+
+            {/* 07 — Contact */}
+            <ContactSection data={contact} />
+          </main>
+
+          {/* Footer */}
+          <Footer data={footer} siteConfig={siteConfig} />
+        </>
+      )}
+    </>
   );
 }
