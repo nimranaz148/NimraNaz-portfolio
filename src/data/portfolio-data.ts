@@ -182,6 +182,18 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "proj-4",
+        title: "Nike Store E-Commerce Platform",
+        category: "E-Commerce & Hackathon",
+        description:
+          "A modern Nike-themed e-commerce web platform featuring dynamic product showcases, interactive shopping cart, category filtering, and responsive checkout UI.",
+        techTags: ["Next.js", "React", "Tailwind CSS", "TypeScript", "Vercel"],
+        outcomes: "Deployed live on Vercel with responsive product catalog, cart workflows, and fast page load times",
+        liveUrl: "https://hackthaon-2025.vercel.app/",
+        sourceUrl: "https://github.com/nimranaz148/hackthaon-2025",
+        featured: true,
+      },
+      {
+        id: "proj-5",
         title: "Doctor Appointment Booking System",
         category: "Web Application",
         description:
@@ -192,7 +204,7 @@ export const portfolioData: PortfolioData = {
         featured: false,
       },
       {
-        id: "proj-5",
+        id: "proj-6",
         title: "Physical AI & Humanoid Robotics Portal",
         category: "Hackathon Project",
         description:
@@ -204,7 +216,7 @@ export const portfolioData: PortfolioData = {
         featured: true,
       },
       {
-        id: "proj-6",
+        id: "proj-7",
         title: "Dashboard Live — Analytics Platform",
         category: "SaaS Dashboard",
         description:
