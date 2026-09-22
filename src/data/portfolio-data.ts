@@ -161,11 +161,11 @@ export const portfolioData: PortfolioData = {
       {
         id: "proj-2",
         title: "AI Service Marketplace",
-        category: "AI & Full-Stack",
+        category: "Agentic AI & Full-Stack",
         description:
-          "A full-stack web marketplace designed to showcase and discover specialized AI services and tools with categorized listings, modern navigation, and responsive layout.",
-        techTags: ["React", "Next.js", "TypeScript", "Tailwind CSS", "AI Services"],
-        outcomes: "End-to-end marketplace architecture for browsing and ordering AI solutions",
+          "An agentic AI application — a full-stack marketplace where autonomous AI agents power service discovery, categorized listings, and guided ordering, with a modern navigation and responsive layout.",
+        techTags: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Agentic AI"],
+        outcomes: "End-to-end agentic marketplace architecture for browsing and ordering AI solutions",
         sourceUrl: "https://github.com/nimranaz148/ai-service-marketplace",
         featured: true,
       },
