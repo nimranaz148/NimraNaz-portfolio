@@ -164,7 +164,7 @@ export const portfolioData: PortfolioData = {
         category: "Agentic AI & Full-Stack",
         description:
           "An agentic AI application — a full-stack marketplace where autonomous AI agents power service discovery, categorized listings, and guided ordering, with a modern navigation and responsive layout.",
-        techTags: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Agentic AI"],
+        techTags: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Agentic AI", "OpenAI Agents SDK"],
         outcomes: "End-to-end agentic marketplace architecture for browsing and ordering AI solutions",
         sourceUrl: "https://github.com/nimranaz148/ai-service-marketplace",
         featured: true,
@@ -245,6 +245,7 @@ export const portfolioData: PortfolioData = {
           "Agentic AI",
           "Prompt Engineering",
           "OpenAI API",
+          "OpenAI Agents SDK",
           "Gemini API",
           "Python",
           "FastAPI",
