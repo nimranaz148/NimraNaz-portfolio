@@ -10,7 +10,8 @@ export interface SectionHeadingProps {
 
 /**
  * Numbered editorial section heading used consistently across all sections.
- * e.g. "01 — About"
+ * e.g. "01 — About". Renders as a real <h2> so screen readers and outline
+ * tools see each section labeled, instead of a decorative span.
  */
 export default function SectionHeading({ number, title, className }: SectionHeadingProps) {
   return (
@@ -19,9 +20,9 @@ export default function SectionHeading({ number, title, className }: SectionHead
         {number}
       </span>
       <div className="h-px w-12 bg-primary/30" />
-      <span className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+      <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
         {title}
-      </span>
+      </h2>
     </div>
   );
 }

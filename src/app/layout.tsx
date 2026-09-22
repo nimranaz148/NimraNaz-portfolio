@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontDisplay.variable} scroll-smooth`}
+      className={`${fontSans.variable} ${fontDisplay.variable}`}
     >
       <body className="min-h-screen bg-background text-foreground antialiased">
         {/* Skip to main content link (accessibility) */}

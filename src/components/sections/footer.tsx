@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useRef } from 'react';
-import { motion, useInView } from 'motion/react';
+import { gsap } from "@/lib/gsap";
+import { useGSAP } from "@gsap/react";
 import { Mail } from 'lucide-react';
 import { Github, Linkedin, Twitter } from '@/components/ui/social-icons';
 import type { FooterData, SiteConfig } from '@/types';
@@ -21,33 +22,31 @@ const socialIconMap: Record<string, React.ReactNode> = {
 
 export default function Footer({ data, siteConfig }: FooterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-10%" });
 
   const currentYear = new Date().getFullYear();
   const authorName = siteConfig.author || siteConfig.name;
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        ".footer-anim",
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
     },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut" as const,
-      },
-    },
-  };
+    { scope: containerRef }
+  );
 
   return (
     <footer className="relative bg-foreground/[0.03] overflow-hidden pt-12 pb-8">
@@ -56,17 +55,11 @@ export default function Footer({ data, siteConfig }: FooterProps) {
         <Ticker text={data.statusText} />
       </div>
 
-      <motion.div
-        ref={containerRef}
-        variants={containerVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        className="container mx-auto px-6 md:px-8 max-w-7xl"
-      >
+      <div ref={containerRef} className="container mx-auto px-6 md:px-8 max-w-7xl">
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-24">
           {/* Column 1: Focus Areas */}
-          <motion.div variants={itemVariants} className="flex flex-col gap-4">
+          <div className="footer-anim flex flex-col gap-4">
             <h3 className="font-semibold text-lg text-foreground/80">Focus Areas</h3>
             <ul className="flex flex-col gap-2">
               {data.focusAreas.map((area, index) => (
@@ -75,10 +68,10 @@ export default function Footer({ data, siteConfig }: FooterProps) {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
 
           {/* Column 2: Location & Availability */}
-          <motion.div variants={itemVariants} className="flex flex-col gap-4">
+          <div className="footer-anim flex flex-col gap-4">
             <h3 className="font-semibold text-lg text-foreground/80">Location</h3>
             <div className="flex flex-col gap-2">
               <p className="text-muted-foreground text-sm">{data.location || siteConfig.location}</p>
@@ -92,10 +85,10 @@ export default function Footer({ data, siteConfig }: FooterProps) {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Column 3: Connect */}
-          <motion.div variants={itemVariants} className="flex flex-col gap-4">
+          <div className="footer-anim flex flex-col gap-4">
             <h3 className="font-semibold text-lg text-foreground/80">Connect</h3>
             <ul className="flex flex-col gap-2">
               {siteConfig.socialLinks.map((link, index) => (
@@ -111,21 +104,21 @@ export default function Footer({ data, siteConfig }: FooterProps) {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
         </div>
 
         {/* Large Central Name */}
-        <motion.div variants={itemVariants} className="flex flex-col items-center justify-center text-center mb-16 select-none pointer-events-none">
+        <div className="footer-anim flex flex-col items-center justify-center text-center mb-16 select-none pointer-events-none">
           <h2 className="font-display text-6xl md:text-[10rem] leading-none text-foreground/5 tracking-tighter w-full overflow-hidden whitespace-nowrap">
             {authorName}
           </h2>
           <p className="mt-4 text-foreground/40 font-medium tracking-widest uppercase text-sm md:text-base">
             {data.roleSubtitle || siteConfig.role}
           </p>
-        </motion.div>
+        </div>
 
         {/* Bottom Row */}
-        <motion.div variants={itemVariants} className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="footer-anim pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-muted-foreground text-sm">
             © {currentYear} {authorName}. All rights reserved.
           </p>
@@ -134,7 +127,7 @@ export default function Footer({ data, siteConfig }: FooterProps) {
               const label = link.name || link.platform;
               const iconKey = label.toLowerCase();
               const Icon = socialIconMap[iconKey] || <Github className="w-5 h-5" />;
-              
+
               return (
                 <a
                   key={index}
@@ -149,8 +142,8 @@ export default function Footer({ data, siteConfig }: FooterProps) {
               );
             })}
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </footer>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
@@ -16,6 +16,8 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
+  const jobCount = (data.jobs || data.items || []).length;
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
 
   useGSAP(
     () => {
@@ -45,6 +47,10 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
             pin: true,
             scrub: 1,
             invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const idx = Math.round(self.progress * (cards.length - 1));
+              setActiveCardIndex(idx);
+            },
           },
         });
 
@@ -55,13 +61,16 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
             return;
           }
           
-          // Animate previous cards to scale down and translate up slightly
+          // Animate previous cards to scale down and translate up slightly.
+          // Depth is (index - i): distance of each earlier card from the one
+          // currently being revealed, so each card in the stack gets its own
+          // offset instead of every earlier card snapping to the same value.
           tl.to(
             cards.slice(0, index),
             {
-              scale: () => 1 - 0.05 * index,
-              y: () => -20 * index,
-              opacity: 1 - (0.15 * index),
+              scale: (i: number) => 1 - 0.05 * (index - i),
+              y: (i: number) => -20 * (index - i),
+              opacity: (i: number) => 1 - 0.15 * (index - i),
               duration: 1,
               ease: "none",
             },
@@ -109,31 +118,31 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
   );
 
   return (
-    <section 
-      id="experience" 
-      ref={sectionRef} 
-      className="relative bg-[#F4F5F7] py-24 md:py-32 overflow-hidden"
+    <section
+      id="experience"
+      ref={sectionRef}
+      className="relative bg-background py-24 md:py-16 overflow-hidden"
     >
       <div className="container mx-auto px-4 md:px-6">
         <SectionHeading number={data.sectionNumber} title={data.sectionTitle || data.headline} />
-        
-        <div className="mt-8 md:mt-16 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24">
-          <h2 className="font-display text-4xl md:text-6xl font-bold max-w-2xl leading-tight text-gray-900">
+
+        <div className="mt-8 md:mt-8 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-10">
+          <h3 className="font-display text-4xl md:text-5xl font-bold max-w-2xl leading-tight text-foreground">
             {data.headline}
-          </h2>
-          <div className="mt-8 md:mt-0 floating-char relative w-32 h-32 md:w-48 md:h-48 flex-shrink-0">
-            <Image 
+          </h3>
+          <div className="mt-8 md:mt-0 floating-char relative w-32 h-32 md:w-32 md:h-32 flex-shrink-0">
+            <Image
               src="/characters/presenting.jpg"
-              alt="Presenting character"
+              alt="Illustration of Nimra Naz presenting, representing her professional experience"
               fill
               className="object-contain"
             />
           </div>
         </div>
 
-        <div 
-          ref={cardsContainerRef} 
-          className="relative w-full flex flex-col gap-6 md:block md:h-[500px]"
+        <div
+          ref={cardsContainerRef}
+          className="relative w-full flex flex-col gap-6 md:block md:h-[min(480px,60vh)]"
         >
           {(data.jobs || data.items || []).map((job, index) => {
             const dateStr = (job as any).dateRange || `${job.startDate} — ${job.endDate}`;
@@ -145,17 +154,17 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
                 if (el) cardsRef.current[index] = el;
               }}
               className={cn(
-                "w-full rounded-xl p-6 md:p-10 border shadow-sm flex flex-col justify-between transform origin-top",
+                "w-full rounded-xl p-6 md:p-8 border shadow-sm flex flex-col justify-between transform origin-top overflow-y-auto",
                 "relative md:absolute md:top-0 md:left-0 md:h-full",
-                job.accentCard 
-                  ? "bg-[#FEF2F2] border-red-200" 
-                  : "bg-white border-gray-200"
+                job.accentCard
+                  ? "bg-primary-light border-primary/20"
+                  : "bg-card border-border"
               )}
             >
               <div>
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <h4 className="text-2xl md:text-3xl font-bold text-foreground">
                       {job.url ? (
                         <a
                           href={job.url}
@@ -169,27 +178,27 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
                       ) : (
                         job.company
                       )}
-                    </h3>
+                    </h4>
                     <div className="flex items-center gap-3 mt-2 flex-wrap">
-                      <span className="text-lg font-medium text-gray-800">
+                      <span className="text-lg font-medium text-foreground/80">
                         {job.role}
                       </span>
                       {job.type && (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold tracking-wide">
+                        <span className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-semibold tracking-wide">
                           {job.type}
                         </span>
                       )}
                     </div>
                   </div>
-                  <div className="text-gray-500 font-medium bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-100 self-start md:self-auto">
+                  <div className="text-muted-foreground font-medium bg-card/50 backdrop-blur-sm px-4 py-2 rounded-full border border-border self-start md:self-auto">
                     {dateStr}
                   </div>
                 </div>
 
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-2 mb-4">
                   {descList.map((desc: string, i: number) => (
-                    <li key={i} className="flex items-start text-gray-600">
-                      <span className="mr-3 text-red-500 mt-1.5 flex-shrink-0">
+                    <li key={i} className="flex items-start text-muted-foreground">
+                      <span className="mr-3 text-primary mt-1.5 flex-shrink-0">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="6" cy="6" r="4" fill="currentColor" />
                         </svg>
@@ -201,11 +210,11 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
               </div>
 
               {job.metrics && job.metrics.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-auto pt-6 border-t border-gray-100/50">
+                <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-border/50">
                   {job.metrics.map((metric: string, i: number) => (
-                    <span 
+                    <span
                       key={i}
-                      className="px-4 py-2 bg-white rounded-full text-sm font-semibold text-gray-700 shadow-sm border border-gray-100"
+                      className="px-4 py-2 bg-card rounded-full text-sm font-semibold text-foreground/80 shadow-sm border border-border"
                     >
                       {metric}
                     </span>
@@ -215,6 +224,26 @@ export default function ExperienceSection({ data }: ExperienceSectionProps) {
             </div>
             );
           })}
+
+          {/* Card position indicator (desktop pin only) */}
+          {jobCount > 1 && (
+            <div className="hidden md:flex absolute bottom-6 right-6 items-center gap-3 text-sm font-medium text-muted-foreground z-20 bg-card/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border shadow-sm">
+              <span className="tabular-nums">
+                {String(activeCardIndex + 1).padStart(2, "0")} / {String(jobCount).padStart(2, "0")}
+              </span>
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: jobCount }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "h-1.5 rounded-full transition-all duration-300",
+                      i === activeCardIndex ? "w-6 bg-primary" : "w-1.5 bg-border"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

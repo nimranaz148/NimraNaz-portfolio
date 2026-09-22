@@ -43,6 +43,7 @@ export const COLORS = {
   background: "#F4F5F7",
   foreground: "#1a1a1a",
   primary: "#DC2626",
+  primaryHover: "#B91C1C",
   primaryLight: "#FEF2F2",
   card: "#FFFFFF",
   muted: "#6B7280",

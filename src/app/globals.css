@@ -7,8 +7,10 @@
   --card: #FFFFFF;
   --card-foreground: #1a1a1a;
   --primary: #DC2626;
+  --primary-hover: #B91C1C;
   --primary-foreground: #FFFFFF;
   --primary-light: #FEF2F2;
+  --overlay: rgba(24, 24, 27, 0.4);
   --secondary: #F4F5F7;
   --secondary-foreground: #1a1a1a;
   --muted: #F1F5F9;
@@ -30,8 +32,10 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-light: var(--primary-light);
+  --color-overlay: var(--overlay);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -94,12 +98,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--border);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--muted-foreground);
 }
 
 /* ─── Selection ─────────────────────────────────────────────── */

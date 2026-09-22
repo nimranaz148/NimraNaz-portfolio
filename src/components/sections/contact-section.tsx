@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,6 +33,9 @@ type FormData = z.infer<typeof formSchema>;
 export default function ContactSection({ data }: ContactSectionProps) {
   const containerRef = useRef<HTMLElement>(null);
   const watermarkRef = useRef<HTMLDivElement>(null);
+  const formColRef = useRef<HTMLDivElement>(null);
+  const socialColRef = useRef<HTMLDivElement>(null);
+  const submitContentRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -60,8 +62,46 @@ export default function ContactSection({ data }: ContactSectionProps) {
           scrub: true,
         },
       });
+
+      gsap.fromTo(
+        formColRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: { trigger: containerRef.current, start: "top 70%" },
+        }
+      );
+
+      gsap.fromTo(
+        socialColRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          delay: 0.2,
+          ease: "power2.out",
+          scrollTrigger: { trigger: containerRef.current, start: "top 70%" },
+        }
+      );
     },
     { scope: containerRef }
+  );
+
+  // Crossfade the submit button's content on state change (replaces Motion's AnimatePresence)
+  useGSAP(
+    () => {
+      if (!submitContentRef.current) return;
+      gsap.fromTo(
+        submitContentRef.current,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.2, ease: "power2.out" }
+      );
+    },
+    { dependencies: [isSubmitting, isSuccess], scope: containerRef }
   );
 
   const onSubmit = async (formData: FormData) => {
@@ -83,13 +123,13 @@ export default function ContactSection({ data }: ContactSectionProps) {
     <section
       id="contact"
       ref={containerRef}
-      className="relative w-full py-24 md:py-32 overflow-hidden bg-[#F4F5F7]"
+      className="relative w-full py-24 md:py-32 overflow-hidden bg-background"
     >
       <Ticker text={data.headline || "GET IN TOUCH"} />
 
       <div
         ref={watermarkRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12vw] font-display font-bold text-black/5 whitespace-nowrap pointer-events-none select-none z-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12vw] font-display font-bold text-foreground/5 whitespace-nowrap pointer-events-none select-none z-0"
         aria-hidden="true"
       >
         GET IN TOUCH
@@ -100,17 +140,12 @@ export default function ContactSection({ data }: ContactSectionProps) {
 
         <div className="mt-16 md:mt-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Left Column: Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <div className="glass-strong rounded-xl p-6 sm:p-8 md:p-10 bg-white/80 backdrop-blur-md border border-white/20 shadow-xl">
-              <h3 className="font-display text-3xl font-bold text-gray-900 mb-2">
+          <div ref={formColRef}>
+            <div className="glass-strong rounded-xl p-6 sm:p-8 md:p-10 bg-card/80 backdrop-blur-md border border-card-foreground/10 shadow-xl">
+              <h3 className="font-display text-3xl font-bold text-foreground mb-2">
                 Let&apos;s build something great
               </h3>
-              <p className="text-gray-600 mb-8">
+              <p className="text-muted-foreground mb-8">
                 {data.subheadline || "Fill out the form below and I'll get back to you as soon as possible."}
               </p>
 
@@ -119,7 +154,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                   <div className="space-y-2">
                     <label
                       htmlFor="firstName"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-foreground/80"
                     >
                       First Name
                     </label>
@@ -127,8 +162,8 @@ export default function ContactSection({ data }: ContactSectionProps) {
                       id="firstName"
                       type="text"
                       className={cn(
-                        "w-full px-4 py-3 rounded-lg border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#DC2626]/20 focus:border-[#DC2626] transition-colors",
-                        errors.firstName ? "border-red-500" : "border-gray-200"
+                        "w-full px-4 py-3 rounded-lg border bg-card/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors",
+                        errors.firstName ? "border-destructive" : "border-border"
                       )}
                       placeholder="John"
                       aria-invalid={!!errors.firstName}
@@ -136,7 +171,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                       {...register("firstName")}
                     />
                     {errors.firstName && (
-                      <p id="firstName-error" className="text-sm text-red-500 mt-1">
+                      <p id="firstName-error" className="text-sm text-destructive mt-1">
                         {errors.firstName.message}
                       </p>
                     )}
@@ -145,7 +180,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                   <div className="space-y-2">
                     <label
                       htmlFor="lastName"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-foreground/80"
                     >
                       Last Name
                     </label>
@@ -153,8 +188,8 @@ export default function ContactSection({ data }: ContactSectionProps) {
                       id="lastName"
                       type="text"
                       className={cn(
-                        "w-full px-4 py-3 rounded-lg border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#DC2626]/20 focus:border-[#DC2626] transition-colors",
-                        errors.lastName ? "border-red-500" : "border-gray-200"
+                        "w-full px-4 py-3 rounded-lg border bg-card/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors",
+                        errors.lastName ? "border-destructive" : "border-border"
                       )}
                       placeholder="Naz"
                       aria-invalid={!!errors.lastName}
@@ -162,7 +197,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                       {...register("lastName")}
                     />
                     {errors.lastName && (
-                      <p id="lastName-error" className="text-sm text-red-500 mt-1">
+                      <p id="lastName-error" className="text-sm text-destructive mt-1">
                         {errors.lastName.message}
                       </p>
                     )}
@@ -172,7 +207,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                 <div className="space-y-2">
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-foreground/80"
                   >
                     Email Address
                   </label>
@@ -180,8 +215,8 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     id="email"
                     type="email"
                     className={cn(
-                      "w-full px-4 py-3 rounded-lg border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#DC2626]/20 focus:border-[#DC2626] transition-colors",
-                      errors.email ? "border-red-500" : "border-gray-200"
+                      "w-full px-4 py-3 rounded-lg border bg-card/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors",
+                      errors.email ? "border-destructive" : "border-border"
                     )}
                     placeholder="john@example.com"
                     aria-invalid={!!errors.email}
@@ -189,7 +224,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <p id="email-error" className="text-sm text-red-500 mt-1">
+                    <p id="email-error" className="text-sm text-destructive mt-1">
                       {errors.email.message}
                     </p>
                   )}
@@ -198,7 +233,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                 <div className="space-y-2">
                   <label
                     htmlFor="message"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-foreground/80"
                   >
                     Message
                   </label>
@@ -206,8 +241,8 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     id="message"
                     rows={4}
                     className={cn(
-                      "w-full px-4 py-3 rounded-lg border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#DC2626]/20 focus:border-[#DC2626] transition-colors resize-none",
-                      errors.message ? "border-red-500" : "border-gray-200"
+                      "w-full px-4 py-3 rounded-lg border bg-card/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none",
+                      errors.message ? "border-destructive" : "border-border"
                     )}
                     placeholder="Tell me about your project..."
                     aria-invalid={!!errors.message}
@@ -215,7 +250,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     {...register("message")}
                   />
                   {errors.message && (
-                    <p id="message-error" className="text-sm text-red-500 mt-1">
+                    <p id="message-error" className="text-sm text-destructive mt-1">
                       {errors.message.message}
                     </p>
                   )}
@@ -226,16 +261,16 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     <input
                       id="consent"
                       type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300 text-[#DC2626] focus:ring-[#DC2626]"
+                      className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
                       {...register("consent")}
                     />
                   </div>
-                  <div className="text-sm text-gray-600">
-                    <label htmlFor="consent" className="font-medium text-gray-700">
+                  <div className="text-sm text-muted-foreground">
+                    <label htmlFor="consent" className="font-medium text-foreground/80">
                       I agree to be contacted regarding this inquiry
                     </label>
                     {errors.consent && (
-                      <p className="text-red-500 mt-1">{errors.consent.message}</p>
+                      <p className="text-destructive mt-1">{errors.consent.message}</p>
                     )}
                   </div>
                 </div>
@@ -244,64 +279,40 @@ export default function ContactSection({ data }: ContactSectionProps) {
                   type="submit"
                   disabled={isSubmitting || isSuccess}
                   className={cn(
-                    "w-full flex items-center justify-center gap-2 py-4 px-8 rounded-full text-white font-medium transition-all duration-300",
+                    "w-full flex items-center justify-center gap-2 py-4 px-8 rounded-full text-primary-foreground font-medium transition-all duration-300",
                     isSuccess
                       ? "bg-green-500 hover:bg-green-600"
-                      : "bg-[#DC2626] hover:bg-[#B91C1C]",
+                      : "bg-primary hover:bg-primary-hover",
                     (isSubmitting || isSuccess) && "opacity-90 cursor-not-allowed"
                   )}
                 >
-                  <AnimatePresence mode="wait">
+                  <div ref={submitContentRef} className="flex items-center gap-2">
                     {isSubmitting ? (
-                      <motion.div
-                        key="loading"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex items-center gap-2"
-                      >
+                      <>
                         <Loader2 className="w-5 h-5 animate-spin" />
                         <span>Sending...</span>
-                      </motion.div>
+                      </>
                     ) : isSuccess ? (
-                      <motion.div
-                        key="success"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex items-center gap-2"
-                      >
+                      <>
                         <Check className="w-5 h-5" />
                         <span>Message Sent!</span>
-                      </motion.div>
+                      </>
                     ) : (
-                      <motion.div
-                        key="idle"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex items-center gap-2"
-                      >
+                      <>
                         <Send className="w-5 h-5" />
                         <span>Send Message</span>
-                      </motion.div>
+                      </>
                     )}
-                  </AnimatePresence>
+                  </div>
                 </button>
               </form>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Column: Social Links & Image */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col justify-between h-full"
-          >
+          <div ref={socialColRef} className="flex flex-col justify-between h-full">
             <div>
-              <h3 className="font-display text-2xl font-bold text-gray-900 mb-6">
+              <h3 className="font-display text-2xl font-bold text-foreground mb-6">
                 Connect with me
               </h3>
               <div className="flex flex-wrap gap-4 mb-12">
@@ -328,18 +339,26 @@ export default function ContactSection({ data }: ContactSectionProps) {
                   />
                 )}
               </div>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20 w-fit">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                </span>
+                Usually replies within 24 hours
+              </div>
             </div>
 
             <div className="relative aspect-square w-full max-w-sm mx-auto lg:mt-auto rounded-2xl overflow-hidden shadow-2xl">
               <Image
                 src="/characters/thumbs-up.jpg"
-                alt="Character giving a thumbs up"
+                alt="Illustration of Nimra Naz giving a thumbs up, welcoming visitors to get in touch"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 400px"
               />
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -360,7 +379,7 @@ function SocialButton({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-2 px-5 py-3 rounded-full bg-white text-gray-700 hover:text-[#DC2626] hover:shadow-lg transition-all duration-300 border border-gray-200"
+      className="flex items-center gap-2 px-5 py-3 rounded-full bg-card text-foreground/80 hover:text-primary hover:shadow-lg transition-all duration-300 border border-border"
       aria-label={label}
     >
       {icon}

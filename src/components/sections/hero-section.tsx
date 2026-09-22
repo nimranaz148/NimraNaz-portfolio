@@ -161,7 +161,7 @@ export default function HeroSection({ siteConfig, hero }: HeroSectionProps) {
 
             <div className="hero-anim flex flex-wrap gap-4 pt-4 items-center">
               <MagneticButton>
-                <a href={hero.primaryCTA?.href || "#projects"} className="inline-block px-8 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors">
+                <a href={hero.primaryCTA?.href || "#projects"} className="inline-block px-8 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors">
                   {hero.primaryCTA?.label || "View Projects"}
                 </a>
               </MagneticButton>
@@ -170,36 +170,30 @@ export default function HeroSection({ siteConfig, hero }: HeroSectionProps) {
                   {hero.secondaryCTA?.label || "Contact Me"}
                 </a>
               </MagneticButton>
-              <MagneticButton>
-                <button
-                  type="button"
-                  onClick={handlePlayIntro}
-                  className={cn(
-                    "inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all shadow-sm cursor-pointer",
-                    isPlayingIntro
-                      ? "bg-primary text-white ring-2 ring-primary/30"
-                      : "border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 hover:border-primary/50"
-                  )}
-                >
-                  <span className={cn("w-2 h-2 rounded-full", isPlayingIntro ? "bg-white animate-pulse" : "bg-primary animate-ping")} />
-                  <span>{isPlayingIntro ? "Pause Intro" : "▶ Hear Intro (12s)"}</span>
-                </button>
-              </MagneticButton>
             </div>
           </div>
 
           {/* Right Column - 3D Character & Interactive Video */}
           <div ref={rightColRef} className="relative h-[400px] md:h-[600px] w-full flex items-center justify-center perspective-[1000px]">
-            <div 
+            <div
               ref={characterRef}
-              className="relative w-full max-w-[400px] aspect-[3/4] rounded-xl overflow-hidden glass shadow-2xl group cursor-pointer"
+              role="button"
+              tabIndex={0}
               onClick={handlePlayIntro}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handlePlayIntro();
+                }
+              }}
+              className="relative w-full max-w-[400px] aspect-[3/4] rounded-xl overflow-hidden glass shadow-2xl group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+              aria-label={isPlayingIntro ? "Pause Nimra Naz's voice introduction" : "Play Nimra Naz's 12-second voice introduction"}
               title={isPlayingIntro ? "Click to pause intro" : "Click to hear Nimra speak"}
             >
               {/* Static Avatar */}
-              <Image 
+              <Image
                 src="/characters/standing.jpg"
-                alt="3D Character"
+                alt="Animated portrait of Nimra Naz — select to play a 12-second voice introduction"
                 fill
                 className={cn(
                   "object-cover transition-opacity duration-500",
@@ -217,14 +211,14 @@ export default function HeroSection({ siteConfig, hero }: HeroSectionProps) {
                 preload="auto"
                 onEnded={() => setIsPlayingIntro(false)}
                 className={cn(
-                  "absolute inset-0 w-full h-full object-cover transition-opacity duration-500 bg-[#E5E7EB]",
+                  "absolute inset-0 w-full h-full object-cover transition-opacity duration-500 bg-border",
                   isPlayingIntro ? "opacity-100" : "opacity-0 pointer-events-none"
                 )}
               />
 
               {/* Floating Pill when not playing */}
               {!isPlayingIntro && (
-                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/95 hover:bg-white text-foreground shadow-lg backdrop-blur-md border border-white/70 transition-all group-hover:scale-105 active:scale-95 pointer-events-none">
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 px-4 py-2 rounded-full bg-card/95 hover:bg-card text-foreground shadow-lg backdrop-blur-md border border-card/70 transition-all group-hover:scale-105 active:scale-95 pointer-events-none">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
@@ -232,7 +226,7 @@ export default function HeroSection({ siteConfig, hero }: HeroSectionProps) {
                   <span className="text-xs font-semibold tracking-wide text-foreground">
                     Hear Me Speak (12s)
                   </span>
-                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary text-white text-[9px] font-bold">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold">
                     ▶
                   </span>
                 </div>
@@ -241,7 +235,7 @@ export default function HeroSection({ siteConfig, hero }: HeroSectionProps) {
               {/* Live indicator & Stop button when playing */}
               {isPlayingIntro && (
                 <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/70 text-white backdrop-blur-md text-xs font-medium border border-white/20 shadow-md">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-overlay text-primary-foreground backdrop-blur-md text-xs font-medium border border-card/20 shadow-md">
                     <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     <span>Speaking...</span>
                   </div>
@@ -252,7 +246,7 @@ export default function HeroSection({ siteConfig, hero }: HeroSectionProps) {
                       videoRef.current?.pause();
                       setIsPlayingIntro(false);
                     }}
-                    className="p-1.5 px-2.5 rounded-full bg-black/70 hover:bg-black text-white text-xs font-bold backdrop-blur-md border border-white/20 transition-all shadow-md"
+                    className="p-1.5 px-2.5 rounded-full bg-overlay hover:bg-foreground text-primary-foreground text-xs font-bold backdrop-blur-md border border-card/20 transition-all shadow-md"
                     title="Stop video"
                   >
                     ✕
